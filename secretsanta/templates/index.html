@@ -1,0 +1,11 @@
+{% block content %}
+<h1>Secret Santa</h1>
+
+<p> It fucking works. </p>
+
+<h2>Dynamic content</h2>
+<a href="{% url 'users' %}"> List all users </a>
+<a href="{% url 'register'%}"> Add new user </a>
+<p>You have visited this page {{ num_visits }} time{{ num_visits|pluralize }}.</p>
+
+{% endblock %}
