@@ -3,21 +3,13 @@
 <h1>List of All Users</h1>
 
 {% if user_list %}
-  <ul>
-
-  {% for user in user_list %}
-    <li>
-      <a href="{{ user.get_absolute_url }}">
-      {{ user.username }}
-      </a>
-    </li>
-  {% endfor %}
-
- </ul>
+ <ul class="list-group">
+{% for user in user_list %}
+    <li class="list-group-item">{{ user.username }}</li>
+{% endfor %}
+</ul>
 {% else %}
   <p>There are no users registered yet.</p>
 {% endif %}
-        
-        
         
 {% endblock %}

@@ -1,0 +1,33 @@
+{% block content %}
+
+<h1>Secret santa matches</h1>
+
+{% if participants_list %}
+ <ul class="list-group">
+{% for p in participants_list %}
+    <li>Giver: {{ p.giver }}</li>
+    <li>Receiver: {{ p.receiver }}</li>
+{% endfor %}
+</ul>
+<h3> Make new Santa's list</h3>
+<form action="{% url 'match'%}" method="post">
+  {% csrf_token %}
+  <fieldset>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Make Pairs</button>
+    </div>
+  </fieldset>
+</form>
+{% else %}
+<h3> Still No Santa's list? Let's make one. Click on the button below to draw pairs.</h3>
+<form action="{% url 'match' %}" method="post">
+  {% csrf_token %}
+  <fieldset>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Make Pairs</button>
+    </div>
+  </fieldset>
+</form>
+{% endif %}
+        
+{% endblock %}
