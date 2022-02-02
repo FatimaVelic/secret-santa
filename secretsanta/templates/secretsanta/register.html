@@ -1,14 +1,94 @@
-{% block content %} 
+{% extends "base.html" %}
 
+{% block content %} 
 <!--Register--> 
-<div class="container">
-	<h1>Register</h1>
-	<form method="POST">
-		{% csrf_token %}
-		{{ register_form }}                    
-		<button class="btn btn-primary" type="submit">Register</button>
-	</form>
-	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+<div class="container-fluid">
+{% if user.is_authenticated %}
+{% if request.user.is_staff %}
+  <div class="row">
+	<div class="col">
+	  <h1>Register</h1>
+	  <div class="reg">
+	 	<form method="POST">
+	 	{% csrf_token %}
+        <table class="table table-responsive-sm">
+          <tr>
+			<th>{{ register_form.first_name.label_tag }}</th>
+			<td>
+				{{ register_form.first_name.errors }} <br>
+				{{ register_form.first_name }}
+			</td>
+		  </tr>
+		  <tr>
+			<th>{{ register_form.last_name.label_tag }}</th>
+			<td>
+			  {{ register_form.last_name.errors }} <br>
+			  {{ register_form.last_name }}
+			</td>
+		  </tr>
+		  <tr>
+			<th>{{ register_form.username.label_tag }}</th>
+			<td>
+			  {{ register_form.username.errors }} <br>
+			  {{ register_form.username }} <br>
+			  {{ register_form.username.help_text }}
+			</td>
+		  </tr>
+		  <tr>
+			<th>{{ register_form.email.label_tag }}</th>
+			<td>
+			  {{ register_form.email.errors }} <br>
+			  {{ register_form.email }}
+			</td>
+		  </tr>
+		  <tr>
+			<th>{{ register_form.password1.label_tag }}</th>
+			<td>
+			  {{ register_form.password1.errors }} <br>
+			  {{ register_form.password1 }} <br>
+			  {{ register_form.password1.help_text }}
+			</td>
+		  </tr>
+		  <tr>
+			<th>{{ register_form.password2.label_tag }}</th>
+			<td>
+			  {{ register_form.password2.errors }} <br>
+			  {{ register_form.password2 }} <br>
+			  {{ register_form.password2.help_text }}
+			</td>
+		  </tr>
+		  <tr>
+	   		<td>
+				<button class="btn btn-primary" type="submit">Register</button>
+			</td>
+		  </tr>
+		  <tr>
+		  	<td>
+				<p class="text-center">Already have an account?</p> 
+				<button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+		  	</td>
+		  </tr>
+        </table>
+        </form>
+	  </div>
+	</div>
+  </div>
+{% else %}
+  <div class="row">
+    <div class="col">
+      <p>You are not authorised to perfom this action.</p>
+      <button type="submit" class="btn btn-primary"><a href="{% url 'index' %}"> Back to main page</a></button>
+    </div>
+  </div>
+{% endif %}
+{% else %}
+  <div class="row">
+    <div class="col">
+      <p>You need to be logged in in order to proceed.</p>
+      <button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+    </div>
+  </div>
+{% endif %}
 </div>
 
 {% endblock %}

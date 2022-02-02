@@ -1,92 +1,111 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.http import HttpResponseRedirect
 from django.urls import reverse 
-from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.views import generic, View
-from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .forms import NewUserForm
 from .models import Participants
 from . import pairs_generator
-# Create your views here.
 
 
 def index(request):
-   
-    # Number of visits to this view, as counted in the session variable.
-    num_visits = request.session.get('num_visits', 1)
-    request.session['num_visits'] = num_visits+1
-    context={'num_visits': num_visits}  
 
-    # Render the HTML template index.html with the data in the context variable.
+    if (request.user.is_authenticated):
+        if (Participants.objects.filter(giver = request.user).exists() or Participants.objects.filter(receiver = request.user).exists()):
+            try:
+                field = "receiver"
+                current_user = request.user
+                p_giver = current_user
+                temp = Participants.objects.get(giver = current_user)
+                p_receiver = getattr(temp, field)
+            except:
+                field = "giver"
+                current_user = request.user
+                p_giver = current_user
+                temp = Participants.objects.get(receiver = current_user)
+                p_receiver = getattr(temp, field)
+
+        else:
+            current_user = User.objects.get(id = request.user.id)
+            p_giver = None
+            p_receiver = None
+    else:
+        current_user = request.user
+        p_giver = None
+        p_receiver = None
+
+    context={'current_user': current_user, 'p_giver': p_giver, 'p_receiver': p_receiver,}  
     return render(request, 'index.html',context=context)
 
-class UserListView(generic.ListView):
+class UserListView(LoginRequiredMixin, generic.ListView):
     model = User
 
-class ParticipantsListView(generic.ListView):
+    def get_queryset(self):
+        return User.objects.exclude(is_superuser = True)
+
+class ParticipantsListView(LoginRequiredMixin, generic.ListView):
     model = Participants
 
-def matchPairs(request):
+def match_pairs(request):
     participants = User.objects.all().exclude(is_superuser=True)
     participants_names = [p.id for p in participants]
     i = 0
     Givers = []
     Receivers = []
     if request.method == "POST":
-        [givers, receivers] = pairs_generator.generate_match(participants_names)
-        while i < len(receivers):
-            if givers[i] == None:
+        [temp_givers, temp_receivers] = pairs_generator.generate_match(participants_names)
+        while i < len(temp_givers):
+            if temp_givers[i] == None:
                 Givers.append(None) 
             else:
-                Givers.append(User.objects.filter(pk = givers[i]))
-            Receivers.append(User.objects.filter(pk = receivers[i]))
-            
+                Givers.append(User.objects.get(pk = temp_givers[i]))
+            Receivers.append(User.objects.get(pk = temp_receivers[i]))
             Participants.objects.create(giver = Givers[i], receiver = Receivers[i])
-            messages.success(request, "Matching successful! Here's the list.")
-            return redirect('participants')
+            i += 1
+        messages.success(request, "Matching successful! Here's the list.")
+        return redirect('participants')
     else:
         messages.error(request, "Woops. Something went wrong. Please try again.")
         return redirect('participants')
 
+def participants_reset(request):
+    if request.method == "POST":
+        Participants.objects.all().delete()
+        messages.success(request, "Old Santa's list has been deleted successfully.") 
+        return redirect('delete-completed')
+    else:
+        messages.error(request, "Woops. Something went wrong. Please try again.")
+        return redirect('participants')
 
-"""class MatchPairs(View):
-    template_unmatched = "match_pairs_new.html"
-    template_matched = "match_pairs_completed.html"
-     
-    def get(self, request):
-        is_paired = matching_mechanism.is_paired()
-        participants = User.objects.all()
-        context = {
-            ['is_paired'] = is_paired,
-            ['user_list'] = participants
-        }
-        template = self.template_matched if (
-            is_paired) else self.template_unmatched
-        return render(request=request, template_name=template, context=context)
-
-    def post(self, request):
-        participants = User.objects.count()
-        if participants < 3:
-            mes = ('`There has to be at least three people for this to work.')
-            messages.add_message(self.request, messages.ERROR, mes)
-            return redirect(reverse('match-pairs'))
-        if not matching_mechanism.is_paired():
-            matching_mechanism.make_pairs()
-        participants = User.objects.all()
-        context = {
-            ['user_list'] = participants
-        }
-        return render(request=request, template_name=self.template_matched, context=context)
-"""
-    
-def register_user(request):
+def register_administrator(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful." )
+            administrators = Group.objects.get(name='Administrators') 
+            administrators.user_set.add(user)
+            user.is_staff = True
+            user.save()
+            messages.success(request, "New Administrator added successfully." )
             return redirect("index")
-        messages.error(request, "Woops. Something went wrong. Please try again.")
+        messages.error(request, "Information you entered is inconsistent. Please try again.")
+    form = NewUserForm()
+    return render (request, "secretsanta/register.html", context={"register_form":form})
+
+def register_employee(request):
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            employees = Group.objects.get(name='Employees') 
+            employees.user_set.add(user)
+            user.save()
+            messages.success(request, "New Employee added successfully" )
+            return redirect("index")
+        messages.error(request, "Information you entered is inconsistent. Please try again.")
     form = NewUserForm()
     return render (request, "secretsanta/register.html", context={"register_form":form})

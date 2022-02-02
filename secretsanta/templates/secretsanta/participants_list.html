@@ -1,33 +1,99 @@
+{% extends "base.html" %}
 {% block content %}
 
-<h1>Secret santa matches</h1>
+{% if user.is_authenticated %}
+{% if request.user.is_staff %}
 
-{% if participants_list %}
- <ul class="list-group">
-{% for p in participants_list %}
-    <li>Giver: {{ p.giver }}</li>
-    <li>Receiver: {{ p.receiver }}</li>
-{% endfor %}
-</ul>
-<h3> Make new Santa's list</h3>
-<form action="{% url 'match'%}" method="post">
-  {% csrf_token %}
-  <fieldset>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Make Pairs</button>
+<div class="container-fluid">
+  <div class="row">
+        <div class="col utitle">
+            <h1>Secret santa matches</h1>
+        </div>
+      </div>
+  <div class="row">
+    <div class="col ulist">
+      {% if participants_list %}
+      <table class="table table-responsive-md table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Matched Pairs</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participants_list %}
+        {% if p.giver != None %}
+        <tr>
+          <td>{{ p.giver }} </td>
+          <td>{{ p.receiver }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+      </table>
     </div>
-  </fieldset>
-</form>
+    <div class="col ulist table-responsive">
+      <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Unmatched</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participants_list %}
+        {% if p.giver == None %}
+        <tr>
+          <td> {{ p.receiver }} has no one to exchange gifts with this time.</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h4> Wanna make new Santa's list?</h4>
+      <form action="{% url 'participants-delete' %}" method="get">
+        <fieldset>
+          <div class="form-group">
+              <button type="submit" class="btn btn-primary">Yes, match again</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
 {% else %}
-<h3> Still No Santa's list? Let's make one. Click on the button below to draw pairs.</h3>
-<form action="{% url 'match' %}" method="post">
-  {% csrf_token %}
-  <fieldset>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Make Pairs</button>
+  <div class="row">
+    <div class="col">
+      <p> No Santa's list? Let's make one now. Click on the button below to match pairs.</h>
+      <form action="{% url 'match' %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Make Pairs</button>
+          </div>
+        </fieldset>
+      </form>
     </div>
-  </fieldset>
-</form>
+  </div>
 {% endif %}
-        
+{% else %}
+  <div class="row">
+    <div class="col">
+      <p>You are not authorised to perfom this action.</p>
+      <button type="submit" class="btn btn-primary"><a href="{% url 'index' %}"> Back to main page</a></button>
+    </div>
+  </div>
+{% endif %}
+{% else %}
+  <div class="row">
+    <div class="col">
+      <p>You need to be logged in in order to proceed.</p>
+      <button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+    </div>
+  </div>
+{% endif %}
+</div>
+
 {% endblock %}

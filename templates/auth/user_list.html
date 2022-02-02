@@ -1,15 +1,65 @@
+{% extends "base.html" %}
+
 {% block content %}
 
-<h1>List of All Users</h1>
-
-{% if user_list %}
- <ul class="list-group">
-{% for user in user_list %}
-    <li class="list-group-item">{{ user.username }}</li>
-{% endfor %}
-</ul>
+{% if user.is_authenticated %}
+  {% if request.user.is_staff %}
+    {% if user_list %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col utitle">
+            <h1>All Users</h1>
+            <p>
+              The list contains all registered users. Some of those users may not 
+              be mached.<br> To make sure everyone's included, create new Santa's list.
+            </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col ulist table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th scope="col">First name</th>
+                <th scope="col">Last name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Group</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in user_list %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.groups.all.0 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% else %}
+      <p>There are no registered users yet.</p>
+    {% endif %}
 {% else %}
-  <p>There are no users registered yet.</p>
+  <div class="row">
+    <div class="col ulist">
+      <p>You are not authorised to perfom this action.</p>
+      <button type="submit" class="btn btn-primary"><a href="{% url 'index' %}"> Back to main page</a></button>
+    </div>
+  </div>
 {% endif %}
-        
+{% else %}
+  <div class="row">
+    <div class="col ulist">
+      <p>You need to be logged in in order to proceed.</p>
+      <button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+    </div>
+  </div>
+{% endif %}
+</div>
 {% endblock %}
