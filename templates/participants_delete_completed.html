@@ -6,14 +6,18 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col">
+    <div class="col utitle">
       <h1>Secret santa matches</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col indexbox">
       <p>Now, let's create a new one. </p>
       <form action="{% url 'match'%}" method="post">
         {% csrf_token %}
         <fieldset>
           <div class="form-group">
-              <button type="submit" class="btn btn-primary">Make new pairs.</button>
+              <button type="submit" class="btn btn-light">Make new pairs</button>
           </div>
         </fieldset>
       </form>
@@ -21,17 +25,17 @@
   </div>
   {% else %}
   <div class="row">
-    <div class="col">
+    <div class="col ulist">
       <p>You are not authorised to perfom this action.</p>
-      <button type="submit" class="btn btn-primary"><a href="{% url 'index' %}"> Back to main page</a></button>
+      <button type="submit" class="btn btn-light"><a href="{% url 'index' %}"> Back to main page</a></button>
     </div>
   </div>
 {% endif %}
 {% else %}
   <div class="row">
-    <div class="col">
+    <div class="col ulist">
       <p>You need to be logged in in order to proceed.</p>
-      <button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+      <button type="submit" class="btn btn-light"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
     </div>
   </div>
 {% endif %}

@@ -6,25 +6,29 @@
 {% if user.is_authenticated %}
 {% if request.user.is_staff %}
 
-<h1>Secret santa matches</h1>
 <div class="container-fluid">
   <div class="row">
-    <div class="col">
+    <div class="col utitle">
+      <h1>Secret santa matches</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col indexbox mt-3">
       <p>In order to create new list, old list has to be deleted. This action cannot be undone.<br>Are you sure you want to proceed?</p>
-      <div class="buttons-organiser">
+      <div class="col indexbox">
         <div class="row">
-          <div class="col">
+          <div class="col button-left ">
             <form action="{% url 'participants-reset'%}" method="post">
               {% csrf_token %}
               <fieldset>
                 <div class="form-group">
-                  <button type="submit" class="btn btn-primary">Yes, match again.</button>
+                  <button type="submit" class="btn btn-light">Yes, match again.</button>
                 </div>
               </fieldset>
             </form>
           </div>
-          <div class="col">
-            <button type="submit" class="btn btn-primary"><a href="javascript: history.go(-1)">No, keep the old list.</a></button>
+          <div class="col button-right">
+            <button type="submit" class="btn btn-light"><a href="javascript: history.go(-1)">No, keep the old list.</a></button>
           </div>
         </div>
       </div>
@@ -32,17 +36,17 @@
   </div>
 {% else %}
   <div class="row">
-    <div class="col">
+    <div class="col ulist">
       <p>You are not authorised to perfom this action.</p>
-      <button type="submit" class="btn btn-primary"><a href="{% url 'index' %}"> Back to main page</a></button>
+      <button type="submit" class="btn btn-light"><a href="{% url 'index' %}"> Back to main page</a></button>
     </div>
   </div>
 {% endif %}
 {% else %}
   <div class="row">
-    <div class="col">
+    <div class="col ulist">
       <p>You need to be logged in in order to proceed.</p>
-      <button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+      <button type="submit" class="btn btn-light"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
     </div>
   </div>
 {% endif %}

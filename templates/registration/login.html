@@ -1,37 +1,58 @@
 {% extends "base.html" %}
+
 {% block content %}
-
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
-
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col utitle mt-3">
+            <h1> Secret Santa </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col indexbox mt-3">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <p >Your username and password didn't match. Please try again.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% if next %}
+    <div class="row">
+        <div class="col indexbox mt-3">
+            {% if user.is_authenticated %}
+            <p>
+                You are already logged in. If you want to log in with different account, you ned to log out first. 
+            </p>
+            {% else %}
+                <h3> Welcome!</h3>
+                <p> Log in to proceed.</p>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col reg">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-light" name="next" value="{{ next }}"> Log in </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
