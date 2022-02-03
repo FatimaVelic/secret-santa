@@ -3,14 +3,20 @@
 {% block content %} 
 <!--Register--> 
 <div class="container-fluid">
-{% if user.is_authenticated %}
-{% if request.user.is_staff %}
+	{% if user.is_authenticated and request.user.is_staff == False %}
 	<div class="row">
+        <div class="col ulist mt-3">
+            <p> You are not allowed to perfom this action. </p>
+            <button type="submit" class="btn btn-light"><a href="{% url 'index' %}"> Back to main page</a></button>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
 		<div class="col utitle">
-	  	<h1>Register</h1>
+		  	<h1>Register</h1>
 		</div>
 	</div>
-  <div class="row">
+  	<div class="row">
 	  <div class="reg">
 	 	<form method="POST">
 	 	{% csrf_token %}
@@ -65,29 +71,14 @@
 	 		</div>
 	 		<div class="row mt-3">
 	 			<div class="col">
-	 					<p class="text-center">Already have an account?</p> 
-						<button type="submit" class="btn btn-light"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+	 				<p class="text-center">Already have an account?</p> 
+					<button type="submit" class="btn btn-light"><a href="{% url 'login'%}">Log in</a></button>
 	 			</div>
 	 		</div>
-    </form>
+    	</form>
 	  </div>
   </div>
-{% else %}
-  <div class="row">
-    <div class="col ulist">
-      <p>You are not authorised to perfom this action.</p>
-      <button type="submit" class="btn btn-light"><a href="{% url 'index' %}"> Back to main page</a></button>
-    </div>
-  </div>
-{% endif %}
-{% else %}
-  <div class="row">
-    <div class="col ulist">
-      <p>You need to be logged in in order to proceed.</p>
-      <button type="submit" class="btn btn-light"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
-    </div>
-  </div>
-{% endif %}
+  {% endif %}
 </div>
 
 {% endblock %}

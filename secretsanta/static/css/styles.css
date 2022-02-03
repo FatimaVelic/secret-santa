@@ -5,11 +5,11 @@
 */
 
 
-/* Index */
+/* General */
 
 :focus {
 	outline: 0 !important;
-	background-color: #e0ebe0 !important;
+	background-color: #f6f9f6 !important;
 }
 .navbar a, .navbar a:visited, .navbar a:active {
 	background-color: #FFFFFF;
@@ -21,9 +21,9 @@
 }
 
 .messages{
-	margin: 2% 20% 0% 20%;
-	padding: 3%;
-	font-size: large;
+	margin: 0% 20% 0% 20%;
+	padding: 4%;
+	font-size: 20px;
 	text-align: center;
 }
 
@@ -65,8 +65,6 @@
 	color: #990000;
 }
 
-/* UserList view */
-
 .utitle h1{
 	margin-top: 2%;
 	text-align: center;
@@ -77,7 +75,7 @@
 }
 
 .ulist{
-	margin: 3% 5% 5% 5%;
+	margin: 3% 3% 3% 2%;
 }
 
 .table thead {
@@ -86,6 +84,10 @@
 }
 .table tr:hover td {
 	background-color: #ccdfcc;
+}
+.pagination {
+	margin: 0% 20% 0% 40%;
+	text-align: center;
 }
 
 
@@ -119,7 +121,7 @@
 	padding-left: 0%;
 }
 
-/* Register form */
+/* Register and login form */
 
 .reg {
 	margin: 2% 30% 5% 30%;
@@ -133,4 +135,12 @@
 .reg ul{
 	list-style-type: none;
 	text-align: left;
+}
+
+/* Delete view */
+
+.del{
+	margin: 0% 65% 4% 4%;
+	padding: 2%;
+	background-color: #ebf2eb;
 }

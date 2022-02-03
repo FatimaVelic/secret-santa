@@ -1,29 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 {% if user.is_authenticated %}
 {% if request.user.is_staff %}
-
 <div class="container-fluid">
-  <div class="row">
-    <div class="col utitle">
-      <h1>Secret santa matches</h1>
+    <div class="row">
+        <div class="col mt-3 ml-5 mb-2">
+            <h1> Delete user </h1>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col indexbox">
-      <p>Now, let's create a new one. </p>
-      <form action="{% url 'match'%}" method="post">
-        {% csrf_token %}
-        <fieldset>
-          <div class="form-group">
-              <button type="submit" class="btn btn-light">Make new pairs</button>
-          </div>
-        </fieldset>
-      </form>
+    <div class="row">
+        <div class="col del">
+            <p>Are you sure you want to delete <strong> {{ user }}</strong>?</p>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-light" value >Delete</button>
+            </form>
+        </div>
     </div>
-  </div>
-  {% else %}
+{% else %}
   <div class="row">
     <div class="col ulist">
       <p>You are not authorised to perfom this action.</p>
@@ -40,5 +36,4 @@
   </div>
 {% endif %}
 </div>
-
 {% endblock %}

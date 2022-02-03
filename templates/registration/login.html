@@ -24,14 +24,13 @@
                 You are already logged in. If you want to log in with different account, you ned to log out first. 
             </p>
             {% else %}
-                <h3> Welcome!</h3>
                 <p> Log in to proceed.</p>
             {% endif %}
         {% endif %}
         </div>
     </div>
     <div class="row">
-        <div class="col reg">
+        <div class="col indexbox">
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 <div class="row">
@@ -50,6 +49,12 @@
                     <div class="col">
                         <button type="submit" class="btn btn-light" name="next" value="{{ next }}"> Log in </button>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="p_initial"> No account? <a href="{% url 'register-employee' %}">Register</a> and join the team for the seasonal fun.</p>
+                    </div>
+                    
                 </div>
             </form>
         </div>

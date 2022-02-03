@@ -20,21 +20,25 @@
           <table class="table table-hover">
             <thead>
               <tr>
+                <th scope="col">#</th>
                 <th scope="col">Username</th>
                 <th scope="col">First name</th>
                 <th scope="col">Last name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Group</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               {% for user in user_list %}
               <tr>
+                <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.groups.all.0 }}</td>
+                <td><button class="btn btn-light btn-sm"><a href="{% url 'user-delete' user.pk %}">Delete user</button></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -49,7 +53,7 @@
   <div class="row">
     <div class="col ulist">
       <p>You are not authorised to perfom this action.</p>
-      <button type="submit" class="btn btn-primary"><a href="{% url 'index' %}"> Back to main page</a></button>
+      <button type="submit" class="btn btn-light"><a href="{% url 'index' %}"> Back to main page</a></button>
     </div>
   </div>
 {% endif %}
@@ -57,7 +61,7 @@
   <div class="row">
     <div class="col ulist">
       <p>You need to be logged in in order to proceed.</p>
-      <button type="submit" class="btn btn-primary"><a href="{% url 'login'%}?next={{request.path}}">Log in</a></button>
+      <button type="submit" class="btn btn-light"><a href="{% url 'login' %}">Log in</a></button>
     </div>
   </div>
 {% endif %}

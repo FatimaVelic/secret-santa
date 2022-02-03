@@ -19,14 +19,14 @@
   				<br>
   				{% load static %}
 				<img src="{% static 'img/gifts.png' %}" alt="Gift image">
-  			{% elif p_giver != None and p_receiver == None or request.user.is_superuser == False %}
-  				<h3>Hello {{ p_giver }} </h3>
+  			{% elif p_giver != None and p_receiver == None and request.user.is_superuser == False %}
+  				<h3>Hey {{ current_user }}</h3>
   				<p class="p_initial">
   					It saddens us to say but, this season no one will be exchanging gifts with you. Just before matching process started, your Secret Santa mysteriously dissapeared and is no where to be seen. :( 
   				</p>
   				<h4>Don't be sad.<br>Even without gifts, holidays are still beautiful.</h4>
   			{% else %}
-  					<h3>Hello {{ current_user }}.</h3>
+  					<h3>Hello {{ current_user }} </h3>
   				<p class="p_initial">
   					We still haven't found a match for you. Please come back in few days. Maybe someone will appear to share the joy of holiday giving with you.
   				</p>

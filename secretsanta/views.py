@@ -1,9 +1,9 @@
 from django.http import HttpResponseRedirect
-from django.urls import reverse 
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect
-from django.views import generic, View
+from django.views import View
+from django.views.generic import ListView, DeleteView
 from django.contrib import messages
-from django.contrib.auth import login
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -41,22 +41,30 @@ def index(request):
     context={'current_user': current_user, 'p_giver': p_giver, 'p_receiver': p_receiver,}  
     return render(request, 'index.html',context=context)
 
-class UserListView(LoginRequiredMixin, generic.ListView):
+class UserListView(LoginRequiredMixin, ListView):
     model = User
+    paginate_by = 10
 
     def get_queryset(self):
         return User.objects.exclude(is_superuser = True)
 
-class ParticipantsListView(LoginRequiredMixin, generic.ListView):
+class ParticipantsListView(LoginRequiredMixin, ListView):
     model = Participants
+    paginate_by = 10
 
 def match_pairs(request):
     participants = User.objects.all().exclude(is_superuser=True)
+    num_of_participants = User.objects.count()
     participants_names = [p.id for p in participants]
     i = 0
     Givers = []
     Receivers = []
     if request.method == "POST":
+        if num_of_participants < 3 or num_of_participants == None: 
+            messages.warning(request, "At least three people have to be registered in order to draw matches.")
+            return redirect('participants')
+        else:
+            pass
         [temp_givers, temp_receivers] = pairs_generator.generate_match(participants_names)
         while i < len(temp_givers):
             if temp_givers[i] == None:
@@ -91,7 +99,7 @@ def register_administrator(request):
             user.is_staff = True
             user.save()
             messages.success(request, "New Administrator added successfully." )
-            return redirect("index")
+            return redirect("users")
         messages.error(request, "Information you entered is inconsistent. Please try again.")
     form = NewUserForm()
     return render (request, "secretsanta/register.html", context={"register_form":form})
@@ -104,8 +112,16 @@ def register_employee(request):
             employees = Group.objects.get(name='Employees') 
             employees.user_set.add(user)
             user.save()
-            messages.success(request, "New Employee added successfully" )
+            messages.success(request, "Registration successful" )
             return redirect("index")
         messages.error(request, "Information you entered is inconsistent. Please try again.")
     form = NewUserForm()
     return render (request, "secretsanta/register.html", context={"register_form":form})
+
+class UserDelete(DeleteView):
+    model = User
+
+    success_url = reverse_lazy('users')
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.message, "User successfully deleted!")
+        return super(UserDelete, self).delete(request, *args, **kwargs)
