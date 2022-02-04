@@ -3,6 +3,7 @@
 ## Overview
 Secret Santa project is created with intention to mimic a group game of the same name. There are several versions of the game but this project
 is designed to follow the basic conept of it. The project is intended to be used as fun activity for an office team and number of participants is not limited. 
+Refer to *Secret Santa - documentation.docx* file for more details.
 
 ## Objectives
 Web application randomly matches registered users into pairs and lists them for gift giving process. If there is an uneven number of participants,
