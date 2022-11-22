@@ -1,22 +1,9 @@
 """
   Internal script for drawing pairs of users for Secret Santa game
   Developed by Fatima Velic, February 2022.
-
+  Updated by Fatima Velic, November 2022.
 """
-
-import random
-
-def is_even(x_lst):
-  """ 
-  Check if list lenght is even or odd.
-
-  """
-  if len(x_lst) %2 == 0:
-      return True
-  else:
-      return False
-
-def generate_match(participants_names):
+def generate_match(people):
     """ 
       Function designed in such way that one person and the next person 
       from a randomly shuffled list are chosen and paired while list counter is 
@@ -27,21 +14,13 @@ def generate_match(participants_names):
       
       - No person can be assigned to itself (there’s no x-x pair)
       - Once matched, the pair won’t appear more than once on the list. 
-      - Person can be sorted into only one pair. (if x is matched to y, 
-        x cannot be matched to z)
+      - Person can be sorted into only one pair. (if x is matched to y as a giver, x has 
+        to be matched to z as a receiver but cannot be matched to y as receiver nor
+        it can be matched to z as a giver)
     """
     givers = []
     receivers = []
-    flag = None
-    random.shuffle(participants_names)
-    i = 0
-    while i < len(participants_names):
-      if (is_even(participants_names)):
-          givers.append(participants_names[i])
-          receivers.append(participants_names[i+1])
-          i += 2 
-      else:
-          givers.append(flag)
-          receivers.append(participants_names[i])
-          participants_names.pop(i)
+    for i in range(len(people)):
+        givers.append(people[i])
+        receivers.append(people[(i+1)%(len(people))])
     return givers, receivers
