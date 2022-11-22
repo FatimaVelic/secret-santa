@@ -102,7 +102,7 @@ def register_administrator(request):
             return redirect("users")
         messages.error(request, "Information you entered is inconsistent. Please try again.")
     form = NewUserForm()
-    return render (request, "secretsanta/register.html", context={"register_form":form})
+    return render (request, "secretsanta/register_admin.html", context={"register_form":form})
 
 def register_employee(request):
     if request.method == "POST":
@@ -116,7 +116,7 @@ def register_employee(request):
             return redirect("index")
         messages.error(request, "Information you entered is inconsistent. Please try again.")
     form = NewUserForm()
-    return render (request, "secretsanta/register.html", context={"register_form":form})
+    return render (request, "secretsanta/register_employee.html", context={"register_form":form})
 
 class UserDelete(DeleteView):
     model = User
