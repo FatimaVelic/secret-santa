@@ -50,3 +50,9 @@ This project requires groups from Django's authorisation system. Follow the step
 
 Upon finish, don't forget to deactivate virtual environment by running: `deactivate`. 
 
+##Future improvements
+
+- Gift budget
+- Export santa's list
+- History of santa's lists
+- Wishlist
