@@ -36,15 +36,17 @@ pyton manage.py runserver
 ```
 App will run on default port 8000. In case the port is taken, run `python manage.py runserver 127.0.0.1:<desired_port>`
 
-IMPORTANT
+**IMPORTANT**
+
 SECRET_KEY is purpusaly left empty in settings.py. Please insert your own or generate dummy one at: https://djecrety.ir/ 
 This project requires groups from Django's authorisation system. Follow the steps below to create superuser, enter Django admin board and create groups. 
 
 - `python manage.py createsuperuser` (command will prompt you to enter username, email and password which will be used for accesing Django administration board)
 - `python manage.py runserver`
-- Open your localhost equivalent of http://127.0.0.1:8000/admin/ in browser and login
+- Open your localhost equivalent of http://127.0.0.1:<port>/admin/ in browser and login
 - Add groups *Administrators* and *Employees* (names are case sensitive).
-- Navigate to your localhost equivalent of http://127.0.0.1:8000/ and enjoy
+- Navigate to your localhost equivalent of http://127.0.0.1:<port>/
+- Enjoy! 
 
-Upon finish, don't forget to deactivate virtual environment: 'deactivate` 
+Upon finish, don't forget to deactivate virtual environment by running: `deactivate`. 
 
