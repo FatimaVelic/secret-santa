@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect
+from datetime import date
+from django.http import HttpResponseRedirect, FileResponse
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect
 from django.views import View
@@ -6,10 +7,9 @@ from django.views.generic import ListView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from .forms import NewUserForm
 from .models import Participants
-from . import pairs_generator
+from . import tools
 
 
 def index(request):
@@ -65,7 +65,7 @@ def match_pairs(request):
             return redirect('participants')
         else:
             pass
-        [temp_givers, temp_receivers] = pairs_generator.generate_match(participants_names)
+        [temp_givers, temp_receivers] = tools.generate_match(participants_names)
         while i < len(temp_givers):
             if temp_givers[i] == None:
                 Givers.append(None) 
@@ -117,6 +117,16 @@ def register_employee(request):
         messages.error(request, "Information you entered is inconsistent. Please try again.")
     form = NewUserForm()
     return render (request, "secretsanta/register_employee.html", context={"register_form":form})
+
+def exportSantasList(request):
+    participants = Participants.objects.all()
+    givers = [p.giver.username for p in participants]
+    receivers = [p.receiver.username for p in participants]
+    buffer = tools.exportSanataslist(givers, receivers)
+    today = date.today()
+    date_string = today.strftime("%d-%m-%Y")
+    filename = "santas-list-" + date_string + ".pdf"
+    return FileResponse(buffer, as_attachment=True, filename=filename)
 
 class UserDelete(DeleteView):
     model = User

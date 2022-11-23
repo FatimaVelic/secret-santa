@@ -14,4 +14,5 @@ urlpatterns = [
     path('participants-delete-completed/', TemplateView.as_view(template_name='participants_delete_completed.html'), name='delete-completed'),
     path('participants-reset/', views.participants_reset, name= 'participants-reset'),
     path('user/<int:pk>/delete/', views.UserDelete.as_view(), name='user-delete'),
+    path('participants-export/', views.exportSantasList, name='export'),
 ]
