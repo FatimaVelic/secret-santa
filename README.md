@@ -53,6 +53,5 @@ Upon finish, don't forget to deactivate virtual environment by running: `deactiv
 ## Future improvements
 
 - Gift budget
-- Export santa's list
 - History of santa's lists
 - Wishlist
